@@ -1,597 +1,170 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🇬🇧 Pixel London: Mónica y Edu 🇬🇧</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <style>
-        /* --- VARIABLES & RESET --- */
-        :root {
-            --bg-color: #2c2c2c;
-            --text-color: #d3d3d3;
-            --accent-red: #e74c3c;
-            --accent-blue: #3498db;
-            --accent-gold: #f1c40f;
-            --pixel-border: 4px solid #000;
-            --pixel-shadow: 4px 4px 0px #000;
-        }
+  <meta charset="UTF-8" />
+  <title>MONI X LONDON</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <!-- Pixel font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-        body {
-            background-color: var(--bg-color);
-            /* Patrón de fondo de ladrillo pixelado */
-            background-image:
-                linear-gradient(335deg, #333 23px, transparent 23px),
-                linear-gradient(155deg, #3d3d3d 23px, transparent 23px),
-                linear-gradient(335deg, #333 23px, transparent 23px),
-                linear-gradient(155deg, #3d3d3d 23px, transparent 23px);
-            background-size: 58px 58px;
-            background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+  <!-- React -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 
-            font-family: 'VT323', monospace;
-            color: var(--text-color);
-            padding: 20px;
-            image-rendering: pixelated; /* CRUCIAL PARA PIXEL ART */
-        }
+  <!-- Babel para JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-        h1, h2, h3, .tab-btn {
-            font-family: 'Press Start 2P', cursive;
-            text-transform: uppercase;
-        }
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-        /* --- LAYOUT PRINCIPAL --- */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #4a4a4a;
-            border: var(--pixel-border);
-            box-shadow: var(--pixel-shadow);
-            padding: 20px;
-            position: relative;
-        }
-
-        /* --- HEADER & SPRITES --- */
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 4px dashed var(--text-color);
-            padding-bottom: 20px;
-            position: relative;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            color: var(--accent-gold);
-            text-shadow: 2px 2px 0 #000;
-            line-height: 1.5;
-        }
-
-        .header-deco {
-            font-size: 3rem;
-            margin: 10px 0;
-        }
-
-        /* --- SPRITES & IMAGES (PLACEHOLDERS) --- */
-        /* INSTRUCCIONES: Reemplaza los background-image con tus GIFs/PNGs pixel art */
-        .sprite-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .sprite {
-            width: 64px;
-            height: 64px;
-            /* Placeholder visual */
-            background-color: magenta; 
-            border: 2px solid black;
-            display: inline-block;
-            margin: 0 10px;
-            position: relative;
-        }
-        
-        /* Ejemplo de cómo se vería si tuvieras la imagen */
-        .sprite-monica-edu {
-            /* background-image: url('assets/monica-edu-walk.gif'); */
-            background-size: contain;
-        }
-        
-        .sprite::after {
-             content: 'SPRITE AQUI';
-             font-size: 8px;
-             color: white;
-             position: absolute;
-             top: 50%; left: 50%;
-             transform: translate(-50%, -50%);
-             text-align: center;
-        }
-
-
-        /* --- NAVEGACIÓN (TABS) --- */
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            background: #7f8c8d;
-            border: var(--pixel-border);
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: #000;
-            box-shadow: 2px 2px 0 #000;
-            transition: all 0.1s;
-        }
-
-        .tab-btn:active {
-             box-shadow: 0px 0px 0 #000;
-             transform: translate(2px, 2px);
-        }
-
-        .tab-btn.active {
-            background: var(--accent-red);
-            color: white;
-        }
-
-        /* --- CONTENIDO DEL DÍA (TIMELINE) --- */
-        .day-content {
-            display: none; /* Ocultos por defecto */
-            animation: fadeIn 0.3s steps(4);
-        }
-        .day-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .activity-block {
-            background: #5e5e5e;
-            border: var(--pixel-border);
-            margin-bottom: 20px;
-            padding: 15px;
-            position: relative;
-        }
-
-        .time-slot {
-            background: var(--accent-blue);
-            color: #000;
-            padding: 5px 10px;
-            border: 2px solid #000;
-            display: inline-block;
-            font-family: 'Press Start 2P';
-            font-size: 0.7rem;
-            margin-bottom: 10px;
-        }
-
-        .activity-title {
-            font-size: 1.2rem;
-            color: var(--accent-gold);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .pixel-icon {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 8px 15px;
-            font-size: 1.1rem;
-        }
-        
-        .label {
-            color: #95a5a6;
-            text-transform: uppercase;
-        }
-
-        .links {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .pixel-link {
-            display: inline-block;
-            text-decoration: none;
-            background: #27ae60;
-            color: white;
-            padding: 8px 12px;
-            border: 2px solid #000;
-            font-family: 'Press Start 2P';
-            font-size: 0.6rem;
-            text-transform: uppercase;
-        }
-        .pixel-link.ticket { background: #d35400; }
-
-        /* --- CHECKLIST --- */
-        .checklist-container {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-        }
-        
-        /* Checkbox pixelado personalizado */
-        input[type="checkbox"] {
-            appearance: none;
-            width: 30px;
-            height: 30px;
-            border: 4px solid #000;
-            background: #fff;
-            cursor: pointer;
-            position: relative;
-        }
-        input[type="checkbox"]:checked {
-            background: var(--accent-gold);
-        }
-        input[type="checkbox"]:checked::after {
-            content: '✔';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: #000;
-            font-size: 20px;
-        }
-
-        /* --- SECCIÓN EXTRA (RETRO MAP) --- */
-        .retro-map-section {
-            margin-top: 40px;
-            border: var(--pixel-border);
-            padding: 10px;
-            background: #000;
-            text-align: center;
-        }
-        .map-frame {
-            height: 150px;
-            background: #2c3e50;
-            position: relative;
-            overflow: hidden;
-            /* Simulación simple de mapa retro */
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 20px, #ffffff10 20px, #ffffff10 22px),
-                repeating-linear-gradient(90deg, transparent, transparent 20px, #ffffff10 20px, #ffffff10 22px);
-        }
-        .map-text {
-             position: absolute;
-             top: 50%; left: 50%;
-             transform: translate(-50%, -50%);
-             font-family: 'Press Start 2P';
-             color: var(--accent-red);
-             text-shadow: 2px 2px #000;
-             width: 100%;
-        }
-
-
-        /* Responsive simple */
-        @media (max-width: 600px) {
-            .details-grid { grid-template-columns: 1fr; }
-            .tab-btn { flex-grow: 1; text-align: center; }
-            h1 { font-size: 1rem; }
-        }
-
-    </style>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #1a1a2e, #16213e);
+      font-family: "Press Start 2P", monospace;
+      color: white;
+    }
+    * { box-sizing: border-box; }
+  </style>
 </head>
+
 <body>
+  <div id="root"></div>
 
-<div class="container">
-    <header>
-        <div class="header-deco">👑 🇬🇧 ☕ 🇬🇧 👑</div>
-        <h1>GUÍA PIXEL DE LONDRES<br>PARA MÓNICA Y EDU</h1>
-        
-        <div class="sprite-container">
-            <div class="sprite sprite-monica-edu"></div>
+  <script type="text/babel">
+
+    const { useState, useEffect } = React;
+
+    const gm = q =>
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+
+    function LondonGuide() {
+      const [day, setDay] = useState("jueves");
+      const [checked, setChecked] = useState({});
+      const [showTips, setShowTips] = useState(false);
+
+      useEffect(() => {
+        const saved = localStorage.getItem("checklist");
+        if (saved) setChecked(JSON.parse(saved));
+      }, []);
+
+      const toggle = key => {
+        const n = { ...checked, [key]: !checked[key] };
+        setChecked(n);
+        localStorage.setItem("checklist", JSON.stringify(n));
+      };
+
+      const itinerary = {
+        jueves: {
+          title: "✈️ Llegada + Luces de Londres",
+          zone: "Covent Garden · Piccadilly",
+          items: [
+            ["16:30", "Check-in + paseo Covent Garden", "Ambiente, artistas, café", gm("Covent Garden London")],
+            ["17:30", "Trafalgar Square", "Fotos + National Gallery exterior", gm("Trafalgar Square")],
+            ["18:30", "Piccadilly Circus", "Luces y fotos nocturnas", gm("Piccadilly Circus")],
+            ["19:30", "Oxford Street", "Paseo sin compras serias", gm("Oxford Circus")],
+            ["20:30", "Cena Soho", "Dishoom / pub / asiático", gm("Soho London")]
+          ]
+        },
+        viernes: {
+          title: "🎯 Free Tour + Centro",
+          zone: "Centro histórico",
+          items: [
+            ["09:00", "Desayuno cubierto", "Baños + calor", gm("Covent Garden Market")],
+            ["10:00", "Free Tour", "Historia y contexto de Londres", gm("Covent Garden London")],
+            ["14:30", "St James's Park + Buckingham", "Exterior y paseo", gm("St James's Park")],
+            ["16:30", "Westminster exterior", "Big Ben + Parlamento", gm("Big Ben London")],
+            ["20:00", "Noche West End", "Pub + Piccadilly", gm("Leicester Square")]
+          ]
+        },
+        sabado: {
+          title: "🏰 Torre + 🍺 Pubs",
+          zone: "City · Soho",
+          items: [
+            ["10:00", "Torre de Londres", "Joyas de la Corona (2h)", gm("Tower of London")],
+            ["12:30", "Tower Bridge", "Fotos + Támesis", gm("Tower Bridge")],
+            ["14:00", "Borough Market", "Comer bien", gm("Borough Market")],
+            ["16:00", "St Paul + Leadenhall", "Exterior + mercado cubierto", gm("St Paul's Cathedral")],
+            ["19:30", "Pub Crawl", "Soho + Piccadilly de noche", gm("Soho London")]
+          ]
+        },
+        domingo: {
+          title: "🎨 Arte + 🌿 Vistas",
+          zone: "Trafalgar · City",
+          items: [
+            ["10:30", "National Gallery", "Gratis, baños, arte top", gm("National Gallery London")],
+            ["15:30", "Sky Garden", "Entrada reservada", gm("Sky Garden London")],
+            ["18:00", "Pub tranquilo", "Relax", gm("Covent Garden London")]
+          ]
+        },
+        lunes: {
+          title: "🦕 Museo + Harrods",
+          zone: "South Kensington",
+          items: [
+            ["10:00", "Museo Historia Natural", "Dinosaurios + café", gm("Natural History Museum London")],
+            ["13:30", "Harrods", "Food Hall + baños VIP", gm("Harrods London")],
+            ["16:00", "Hyde Park", "Paseo final", gm("Hyde Park London")]
+          ]
+        }
+      };
+
+      return (
+        <div style={{ padding: 20 }}>
+
+          <h1 style={{ color: "#ffd700" }}>MONI X LONDON 🇬🇧</h1>
+
+          <img
+            src="cover-london.png"
+            alt="Moni y Edu pixel art"
+            style={{ width: "100%", maxWidth: 400, imageRendering: "pixelated" }}
+          />
+
+          <div style={{ margin: "20px 0" }}>
+            {Object.keys(itinerary).map(d => (
+              <button key={d} onClick={() => setDay(d)}
+                style={{
+                  margin: 5,
+                  padding: 10,
+                  background: day === d ? "#ffd700" : "#333",
+                  fontFamily: "inherit"
+                }}>
+                {d}
+              </button>
+            ))}
+          </div>
+
+          <h2>{itinerary[day].title}</h2>
+          <p>📍 {itinerary[day].zone}</p>
+
+          {itinerary[day].items.map((i, idx) => {
+            const key = day + idx;
+            return (
+              <div key={key} style={{ border: "2px solid #555", padding: 10, marginBottom: 10 }}>
+                <input type="checkbox" checked={checked[key]} onChange={() => toggle(key)} />
+                <strong> {i[0]} — {i[1]}</strong>
+                <p>{i[2]}</p>
+                <a href={i[3]} target="_blank">🗺️ Maps</a>
+              </div>
+            );
+          })}
+
+          <button onClick={() => setShowTips(!showTips)}>💡 Trucos</button>
+
+          {showTips && (
+            <ul>
+              <li>Museos gratis</li>
+              <li>Sky Garden con reserva</li>
+              <li>Contactless en transporte</li>
+              <li>Baños en museos y Harrods</li>
+            </ul>
+          )}
+
         </div>
-        <p style="margin-top: 10px; font-size: 1.2rem;">Misión: Sobrevivir al frío y ver cosas chulas.</p>
-    </header>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openDay('jueves')">JUEVES</button>
-        <button class="tab-btn" onclick="openDay('viernes')">VIERNES</button>
-        <button class="tab-btn" onclick="openDay('sabado')">SÁBADO</button>
-        <button class="tab-btn" onclick="openDay('domingo')">DOMINGO (FIXED)</button>
-        <button class="tab-btn" onclick="openDay('lunes')">LUNES</button>
-    </div>
-
-    <div id="jueves" class="day-content active">
-        <h2 style="text-align: center; margin-bottom: 20px;">Level 1: Aterrizaje en Covent Garden</h2>
-
-        <div class="activity-block">
-            <div class="time-slot">15:00 - 16:30</div>
-            <div class="checklist-container"><input type="checkbox" data-id="jue-1"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🧳</span>Llegada y Check-in</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Covent Garden</span>
-                <span class="label">Notas:</span><span>Soltar maletas y respirar hondo. ¡Hola Londres!</span>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">16:30 - 18:00</div>
-            <div class="checklist-container"><input type="checkbox" data-id="jue-2"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🎭</span>Paseo Covent Garden & Neal's Yard</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Covent Garden (Base)</span>
-                <span class="label">Transporte:</span><span>A pie (estáis ahí mismo).</span>
-                <span class="label">Notas:</span><span>Precioso iluminado. Buscad el callejón colorido de Neal's Yard.</span>
-            </div>
-            <div class="links">
-                <a href="https://goo.gl/maps/CoventGarden" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">18:30 - Noche</div>
-            <div class="checklist-container"><input type="checkbox" data-id="jue-3"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🍜</span>Cena en Soho / Chinatown</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Soho</span>
-                <span class="label">Transporte:</span><span>Paseo corto (10 min).</span>
-                <span class="label">Notas:</span><span>Cruzar Shaftesbury Ave. Cientos de opciones para cenar.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/ChinatownLondon" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-    </div>
-
-    <div id="viernes" class="day-content">
-        <h2 style="text-align: center; margin-bottom: 20px;">Level 2: Cultura y Momias (Indoor start)</h2>
-        
-        <div class="activity-block">
-            <div class="time-slot">10:00 - 13:00</div>
-            <div class="checklist-container"><input type="checkbox" data-id="vie-1"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🏛️</span>British Museum</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Bloomsbury</span>
-                <span class="label">Transporte:</span><span>Paseo corto desde CG (12 min).</span>
-                <span class="label">Tickets:</span><span>GRATIS.</span>
-                <span class="label">Notas:</span><span>Baños al entrar. Id a: Piedra Rosetta, Egipto y Frisos del Partenón.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/BritishMuseum" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-
-         <div class="activity-block">
-            <div class="time-slot">13:00 - 14:15</div>
-            <div class="checklist-container"><input type="checkbox" data-id="vie-2"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🥪</span>Lunch Break</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Bloomsbury</span>
-                <span class="label">Notas:</span><span>Algo rápido por la zona. Hay varios Pret a Manger o pubs.</span>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">14:30 - 16:30</div>
-            <div class="checklist-container"><input type="checkbox" data-id="vie-3"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🖼️</span>National Gallery</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Trafalgar Sq.</span>
-                <span class="label">Transporte:</span><span>A pie (15 min bajando Charing Cross Rd).</span>
-                <span class="label">Tickets:</span><span>GRATIS.</span>
-                <span class="label">Notas:</span><span>Highlights: Van Gogh (Girasoles), Monet, Rembrandt. No intentéis verlo todo.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/NationalGalleryLondon" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">16:45 - 18:00</div>
-            <div class="checklist-container"><input type="checkbox" data-id="vie-4"></div>
-            <h3 class="activity-title"><span class="pixel-icon">💂</span>Paseo Whitehall & Big Ben</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Westminster</span>
-                <span class="label">Transporte:</span><span>A pie desde Trafalgar Sq.</span>
-                <span class="label">Notas:</span><span>Ver Horse Guards, Downing St y el Big Ben iluminado al fondo.</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="sabado" class="day-content">
-        <h2 style="text-align: center; margin-bottom: 20px;">Level 3: Dinosaurios y Lujo Kitsch</h2>
-
-        <div class="activity-block">
-            <div class="time-slot">10:00 - 13:00</div>
-            <div class="checklist-container"><input type="checkbox" data-id="sab-1"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🦖</span>Natural History Museum</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>South Kensington</span>
-                <span class="label">Transporte:</span><span>Metro: Covent Gdn -> South Kensington (Piccadilly Line, 15 min).</span>
-                <span class="label">Tickets:</span><span>GRATIS.</span>
-                <span class="label">Notas:</span><span>Edificio brutal. Ver la sala de la ballena azul y zona de dinosaurios.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/NaturalHistoryMuseumLondon" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">15:00 - 17:00</div>
-            <div class="checklist-container"><input type="checkbox" data-id="sab-2"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🛍️</span>Harrods</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Knightsbridge</span>
-                <span class="label">Transporte:</span><span>Paseo (15 min) o 1 parada de metro desde South Ken.</span>
-                <span class="label">Notas:</span><span>Es un laberinto kitsch. Visitad la sala de comida (Food Hall).</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/Harrods" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">Noche</div>
-            <div class="checklist-container"><input type="checkbox" data-id="sab-3"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🍻</span>Noche Libre / West End</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Covent Garden</span>
-                <span class="label">Notas:</span><span>Estando en CG, podéis intentar pillar entradas de musical de última hora o disfrutar los pubs de la zona.</span>
-            </div>
-        </div>
-    </div>
-
-     <div id="domingo" class="day-content">
-        <h2 style="text-align: center; margin-bottom: 20px;">Level 4: La City y Las Vistas (MISIÓN CRÍTICA)</h2>
-
-        <div class="activity-block">
-            <div class="time-slot">10:00 - 12:30</div>
-            <div class="checklist-container"><input type="checkbox" data-id="dom-1"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🏰</span>Torre de Londres</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Tower Hill</span>
-                <span class="label">Transporte:</span><span>Metro: Embankment -> Tower Hill (District Line, 15 min).</span>
-                <span class="label">Tickets:</span><span>DE PAGO (Reservar online YA).</span>
-                <span class="label">Notas:</span><span>Id directos a las Joyas de la Corona al abrir para evitar colas tremendas.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/TowerOfLondon" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-                <a href="https://www.hrp.org.uk/tower-of-london/visit/tickets-and-prices/" target="_blank" class="pixel-link ticket">🎟️ Tickets</a>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">13:00 - 14:30</div>
-            <div class="checklist-container"><input type="checkbox" data-id="dom-2"></div>
-            <h3 class="activity-title"><span class="pixel-icon">⛵</span>Comida en St Katharine Docks</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Tower Bridge</span>
-                <span class="label">Transporte:</span><span>Paseo corto tras la Torre.</span>
-                <span class="label">Notas:</span><span>Un puerto deportivo "escondido" muy bonito con restaurantes.</span>
-            </div>
-        </div>
-
-        <div class="activity-block" style="border-color: var(--accent-red);">
-            <div class="time-slot" style="background: var(--accent-red); color: white;">15:30 - FIJO</div>
-            <div class="checklist-container"><input type="checkbox" data-id="dom-3"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🌇</span>Sky Garden</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>La City</span>
-                <span class="label">Transporte:</span><span>Paseo de 15 min desde la zona de la Torre.</span>
-                <span class="label">Tickets:</span><span>¡CONFIRMADOS!</span>
-                <span class="label">Notas:</span><span>Llevad la reserva en el móvil. Disfrutad las vistas.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/SkyGardenLondon" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-    </div>
-
-     <div id="lunes" class="day-content">
-        <h2 style="text-align: center; margin-bottom: 20px;">Level 5: Arte Moderno y Game Over</h2>
-
-        <div class="activity-block">
-            <div class="time-slot">10:00 - 12:30</div>
-            <div class="checklist-container"><input type="checkbox" data-id="lun-1"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🏭</span>Tate Modern</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>Bankside</span>
-                <span class="label">Transporte:</span><span>Metro/Tren a Blackfriars + paseo por el puente.</span>
-                <span class="label">Tickets:</span><span>GRATIS.</span>
-                <span class="label">Notas:</span><span>Edificio industrial increíble. Subid a la planta superior del edificio nuevo para vistas gratis.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/TateModern" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-
-        <div class="activity-block">
-            <div class="time-slot">12:30 - 14:00</div>
-            <div class="checklist-container"><input type="checkbox" data-id="lun-2"></div>
-            <h3 class="activity-title"><span class="pixel-icon">🍔</span>Borough Market</h3>
-            <div class="details-grid">
-                <span class="label">Zona:</span><span>London Bridge</span>
-                <span class="label">Transporte:</span><span>Paseo por la orilla del río (10 min).</span>
-                <span class="label">Notas:</span><span>Mercado de comida espectacular (y cubierto). Perfecto para comer de puestos.</span>
-            </div>
-             <div class="links">
-                <a href="https://goo.gl/maps/BoroughMarket" target="_blank" class="pixel-link">🗺️ Google Maps</a>
-            </div>
-        </div>
-        
-        <div class="activity-block">
-            <div class="time-slot">Tarde</div>
-            <h3 class="activity-title">✈️ Vuelta a Base y Aeropuerto</h3>
-            <div class="details-grid">
-                <span class="label">Notas:</span><span>Regreso a Covent Garden, recoger maletas y fin de la partida.</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="retro-map-section">
-        <h3><span style="color:var(--accent-gold)">>>></span> ZONA ACTUAL <span style="color:var(--accent-gold)"><<<</span></h3>
-        <div class="map-frame">
-            <div class="map-text">LOADING MAP DATA...<br>[■■■■■□□□□□]</div>
-            </div>
-        <p style="font-size: 0.8rem; margin-top: 5px;">*No uséis este mapa para navegar de verdad, por Dios.*</p>
-    </div>
-
-</div> <script>
-    // --- LÓGICA DE PESTAÑAS (TABS) ---
-    function openDay(dayName) {
-        // 1. Ocultar todos los contenidos
-        const contents = document.querySelectorAll('.day-content');
-        contents.forEach(c => c.classList.remove('active'));
-
-        // 2. Desactivar todos los botones
-        const buttons = document.querySelectorAll('.tab-btn');
-        buttons.forEach(b => b.classList.remove('active'));
-
-        // 3. Activar el seleccionado
-        document.getElementById(dayName).classList.add('active');
-        
-        // Encuentra el botón que ha sido clickeado (un poco hacky pero funciona sin pasar 'this')
-        buttons.forEach(b => {
-            if(b.textContent.toLowerCase().includes(dayName.substring(0,3))) {
-                b.classList.add('active');
-            }
-            if(dayName === 'domingo' && b.textContent.includes('DOMINGO')) {
-                 b.classList.add('active');
-            }
-        });
+      );
     }
 
-    // --- LÓGICA DE CHECKLIST (LOCALSTORAGE) ---
-    document.addEventListener('DOMContentLoaded', () => {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-        // Cargar estado guardado
-        checkboxes.forEach(box => {
-            const id = box.getAttribute('data-id');
-            if (localStorage.getItem(id) === 'checked') {
-                box.checked = true;
-            }
-            
-            // Escuchar cambios
-            box.addEventListener('change', (e) => {
-                if(e.target.checked) {
-                    localStorage.setItem(id, 'checked');
-                    // Efecto de sonido retro opcional (comentado)
-                    // new Audio('https://www.myinstants.com/media/sounds/coin.mp3').play(); 
-                } else {
-                    localStorage.removeItem(id);
-                }
-            });
-        });
-    });
-</script>
-
+    ReactDOM.createRoot(document.getElementById("root")).render(<LondonGuide />);
+  </script>
 </body>
 </html>
