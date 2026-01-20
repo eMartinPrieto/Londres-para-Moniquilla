@@ -1,0 +1,740 @@
+import React, { useState, useEffect } from 'react';
+import { Check, MapPin, Clock, Ticket, Info } from 'lucide-react';
+
+const LondonGuide = () => {
+  const [selectedDay, setSelectedDay] = useState('jueves');
+  const [checkedItems, setCheckedItems] = useState({});
+  const [showTricks, setShowTricks] = useState(false);
+
+  // Cargar checklist desde localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('londonChecklist');
+    if (saved) {
+      setCheckedItems(JSON.parse(saved));
+    }
+  }, []);
+
+  // Guardar checklist en localStorage
+  const toggleCheck = (dayId, activityId) => {
+    const key = `${dayId}-${activityId}`;
+    const newChecked = { ...checkedItems, [key]: !checkedItems[key] };
+    setCheckedItems(newChecked);
+    localStorage.setItem('londonChecklist', JSON.stringify(newChecked));
+  };
+
+  const itinerary = {
+    jueves: {
+      name: 'Jueves',
+      subtitle: 'Llegada y Primera Cerveza',
+      zone: 'Covent Garden',
+      activities: [
+        {
+          id: 1,
+          time: '15:00-16:00',
+          title: 'Check-in Hotel',
+          zone: 'Covent Garden',
+          duration: '1h',
+          transport: 'Desde aeropuerto: Piccadilly Line o Heathrow Express',
+          notes: 'Dejar maletas, refrescarse',
+          maps: 'https://goo.gl/maps/CoventGarden',
+          tickets: false
+        },
+        {
+          id: 2,
+          time: '16:00-18:00',
+          title: 'Covent Garden Market',
+          zone: 'Covent Garden',
+          duration: '1.5h',
+          transport: 'A pie 2min',
+          notes: 'Artistas callejeros, tiendas, baños en el mercado',
+          maps: 'https://goo.gl/maps/CoventGardenMarket',
+          tickets: false
+        },
+        {
+          id: 3,
+          time: '18:00-20:00',
+          title: 'Cena en Seven Dials',
+          zone: 'Covent Garden',
+          duration: '2h',
+          transport: 'A pie 5min',
+          notes: 'Neal\'s Yard colorido, Dishoom recomendado',
+          maps: 'https://goo.gl/maps/SevenDials',
+          tickets: false
+        },
+        {
+          id: 4,
+          time: '20:00-21:00',
+          title: 'Paseo Leicester Square',
+          zone: 'West End',
+          duration: '1h',
+          transport: 'A pie 8min',
+          notes: 'Luces nocturnas, ambiente',
+          maps: 'https://goo.gl/maps/LeicesterSquare',
+          tickets: false
+        }
+      ]
+    },
+    viernes: {
+      name: 'Viernes',
+      subtitle: 'Museos y Realeza',
+      zone: 'Bloomsbury → Westminster',
+      activities: [
+        {
+          id: 1,
+          time: '10:00-13:00',
+          title: 'British Museum',
+          zone: 'Bloomsbury',
+          duration: '2.5-3h',
+          transport: 'A pie 12min',
+          notes: 'Piedra Rosetta, momias, Partenón. Baños + café dentro',
+          maps: 'https://goo.gl/maps/BritishMuseum',
+          tickets: 'GRATIS'
+        },
+        {
+          id: 2,
+          time: '13:00-14:00',
+          title: 'Almuerzo Bloomsbury',
+          zone: 'Bloomsbury',
+          duration: '1h',
+          transport: 'En el museo',
+          notes: 'Café del museo correcto y cálido',
+          maps: '',
+          tickets: false
+        },
+        {
+          id: 3,
+          time: '14:00-16:00',
+          title: 'National Gallery',
+          zone: 'Trafalgar Square',
+          duration: '2h',
+          transport: 'A pie 15min',
+          notes: 'Van Gogh, Da Vinci, Turner. No intentes verlo todo',
+          maps: 'https://goo.gl/maps/NationalGallery',
+          tickets: 'GRATIS'
+        },
+        {
+          id: 4,
+          time: '16:00-17:00',
+          title: 'Trafalgar Square',
+          zone: 'Trafalgar',
+          duration: '1h',
+          transport: 'Al salir',
+          notes: 'Fotos con leones, columna Nelson',
+          maps: 'https://goo.gl/maps/TrafalgarSquare',
+          tickets: false
+        },
+        {
+          id: 5,
+          time: '17:00-18:00',
+          title: 'Westminster + Big Ben',
+          zone: 'Westminster',
+          duration: '1h',
+          transport: 'A pie 10min',
+          notes: 'Fotos clásicas, Westminster Abbey exterior',
+          maps: 'https://goo.gl/maps/BigBen',
+          tickets: false
+        },
+        {
+          id: 6,
+          time: '18:00-20:00',
+          title: 'Cena Southbank',
+          zone: 'South Bank',
+          duration: '1.5h',
+          transport: 'Cruzar Westminster Bridge 12min',
+          notes: 'Vistas iluminadas del Parlamento',
+          maps: 'https://goo.gl/maps/Southbank',
+          tickets: false
+        }
+      ]
+    },
+    sabado: {
+      name: 'Sábado',
+      subtitle: 'Torre, Borough y Arte',
+      zone: 'Tower Hill → Southwark',
+      activities: [
+        {
+          id: 1,
+          time: '09:00-11:00',
+          title: 'Torre de Londres',
+          zone: 'Tower Hill',
+          duration: '2h',
+          transport: 'Tube: Piccadilly → District/Circle (20min)',
+          notes: 'Joyas de la Corona primero. 2h suficiente',
+          maps: 'https://goo.gl/maps/TowerOfLondon',
+          tickets: '£33.60 online'
+        },
+        {
+          id: 2,
+          time: '11:00-11:30',
+          title: 'Tower Bridge',
+          zone: 'Tower Bridge',
+          duration: '30min',
+          transport: 'A pie 5min',
+          notes: 'Fotos icónicas, exterior gratis',
+          maps: 'https://goo.gl/maps/TowerBridge',
+          tickets: false
+        },
+        {
+          id: 3,
+          time: '11:30-13:00',
+          title: 'Borough Market',
+          zone: 'Southwark',
+          duration: '1.5h',
+          transport: 'A pie 15min',
+          notes: 'Comida mundial. Baños públicos cerca',
+          maps: 'https://goo.gl/maps/BoroughMarket',
+          tickets: false
+        },
+        {
+          id: 4,
+          time: '13:00-15:00',
+          title: 'Tate Modern',
+          zone: 'Bankside',
+          duration: '2h',
+          transport: 'A pie 8min',
+          notes: 'Arte moderno. Vistas terraza nivel 10',
+          maps: 'https://goo.gl/maps/TateModern',
+          tickets: 'GRATIS'
+        },
+        {
+          id: 5,
+          time: '15:00-16:00',
+          title: 'Millennium Bridge → St Paul\'s',
+          zone: 'City of London',
+          duration: '45min',
+          transport: 'A pie cruzando puente 5min',
+          notes: 'Puente de Harry Potter. St Paul\'s exterior',
+          maps: 'https://goo.gl/maps/StPauls',
+          tickets: false
+        },
+        {
+          id: 6,
+          time: '18:00+',
+          title: 'Cena Covent Garden',
+          zone: 'Covent Garden',
+          duration: '-',
+          transport: 'Tube: Central Line 8min',
+          notes: 'Zona hotel',
+          maps: '',
+          tickets: false
+        }
+      ]
+    },
+    domingo: {
+      name: 'Domingo',
+      subtitle: 'Naturaleza, Lujo y Sky',
+      zone: 'South Ken → City',
+      activities: [
+        {
+          id: 1,
+          time: '10:00-13:00',
+          title: 'Natural History Museum',
+          zone: 'South Kensington',
+          duration: '2.5-3h',
+          transport: 'Tube: Piccadilly Line directa 12min',
+          notes: 'Dinosaurios, ballena azul. Ve temprano',
+          maps: 'https://goo.gl/maps/NaturalHistoryMuseum',
+          tickets: 'GRATIS'
+        },
+        {
+          id: 2,
+          time: '13:00-14:00',
+          title: 'Almuerzo South Ken',
+          zone: 'South Kensington',
+          duration: '1h',
+          transport: 'A pie 2min',
+          notes: 'Opciones por Exhibition Road',
+          maps: '',
+          tickets: false
+        },
+        {
+          id: 3,
+          time: '14:00-15:30',
+          title: 'Harrods',
+          zone: 'Knightsbridge',
+          duration: '1.5h',
+          transport: 'A pie 12min',
+          notes: 'Food Halls. Baños lujosos gratis',
+          maps: 'https://goo.gl/maps/Harrods',
+          tickets: false
+        },
+        {
+          id: 4,
+          time: '15:30-17:00',
+          title: '⭐ SKY GARDEN ⭐',
+          zone: 'City of London',
+          duration: '1.5h',
+          transport: 'Tube: Piccadilly → Jubilee (25min)',
+          notes: '¡CONFIRMADO! Llegar 10min antes. Vistas 360°',
+          maps: 'https://goo.gl/maps/SkyGarden',
+          tickets: 'RESERVA 15:30'
+        },
+        {
+          id: 5,
+          time: '18:00-20:00',
+          title: 'Cena Shoreditch/Brick Lane',
+          zone: 'Shoreditch',
+          duration: '2h',
+          transport: 'Tube: Northern Line 15min',
+          notes: 'Curries, street art. O volver a hotel si cansados',
+          maps: 'https://goo.gl/maps/BrickLane',
+          tickets: false
+        }
+      ]
+    },
+    lunes: {
+      name: 'Lunes',
+      subtitle: 'Despedida con Encanto',
+      zone: 'Covent Garden → Notting Hill',
+      activities: [
+        {
+          id: 1,
+          time: '10:00-12:00',
+          title: 'Somerset House o War Rooms',
+          zone: 'Covent Garden/Westminster',
+          duration: '1.5-2h',
+          transport: 'Somerset: 5min walk. War Rooms: 10min',
+          notes: 'Somerset: arte. War Rooms: búnker Churchill WWII',
+          maps: 'https://goo.gl/maps/SomersetHouse',
+          tickets: 'War Rooms: £28'
+        },
+        {
+          id: 2,
+          time: '12:00-13:30',
+          title: 'Almuerzo + Compras',
+          zone: 'Covent Garden',
+          duration: '1.5h',
+          transport: 'A pie',
+          notes: 'Shops, recuerdos finales',
+          maps: '',
+          tickets: false
+        },
+        {
+          id: 3,
+          time: '13:30-15:30',
+          title: 'Notting Hill + Portobello',
+          zone: 'Notting Hill',
+          duration: '2h',
+          transport: 'Tube: Central Line 12min',
+          notes: 'Casas de colores, mercadillo, librería de la peli',
+          maps: 'https://goo.gl/maps/PortobelloRoad',
+          tickets: false
+        },
+        {
+          id: 4,
+          time: '15:30-16:30',
+          title: 'Hyde Park (opcional)',
+          zone: 'Hyde Park',
+          duration: '1h',
+          transport: 'A pie 15min',
+          notes: 'Según energía. Bonito incluso con frío',
+          maps: 'https://goo.gl/maps/HydePark',
+          tickets: false
+        },
+        {
+          id: 5,
+          time: '18:00+',
+          title: 'Cena despedida + prep',
+          zone: 'Covent Garden',
+          duration: '-',
+          transport: 'Tube 15min',
+          notes: 'Maletas, descanso',
+          maps: '',
+          tickets: false
+        }
+      ]
+    }
+  };
+
+  const tricks = [
+    { title: 'Museos GRATIS', text: 'British Museum, National Gallery, Tate Modern, Natural History Museum. La "donación" NO es obligatoria.' },
+    { title: 'Entradas Online', text: 'Torre de Londres 10% más barato online + fast track. Sky Garden solo online (gratis pero reserva obligatoria).' },
+    { title: 'Iglesias Gratis', text: 'Westminster Abbey y St Paul\'s: entrada libre durante misas/evensong. Pero no puedes turistear, solo rezar/escuchar.' },
+    { title: 'Transporte', text: 'Usa tu tarjeta contactless directamente. Tope £8.50/día en Zonas 1-2. NO compres Oyster.' },
+    { title: 'London Pass', text: 'Probablemente NO os compensa. Muchos sitios gratis en vuestro plan.' },
+    { title: 'Comer Barato', text: 'Pret A Manger, mercados (Borough), Meal Deals en Tesco (£3-4). Evitar Leicester Square.' },
+    { title: 'Baños', text: 'Todos los museos: gratis y limpios. Grandes almacenes (Harrods). Pubs si compras algo.' },
+    { title: 'Harry Potter Studio', text: '32km fuera de Londres. Tren a Watford (1h) + 3-4h tour. Reservar con SEMANAS. O visita Platform 9¾ gratis en King\'s Cross (10min desde hotel).' }
+  ];
+
+  const currentDay = itinerary[selectedDay];
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)',
+      fontFamily: '"Press Start 2P", monospace',
+      color: '#fff',
+      padding: '20px',
+      imageRendering: 'pixelated'
+    }}>
+      {/* Header con sprites caminando */}
+      <div style={{
+        background: 'linear-gradient(135deg, #dc143c 0%, #ff1744 30%, #e91e63 60%, #c2185b 100%)',
+        padding: '30px 20px',
+        borderRadius: '8px',
+        border: '4px solid #ffd700',
+        boxShadow: '0 8px 0 #8b6914, inset 0 0 20px rgba(255,255,255,0.2)',
+        marginBottom: '30px',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Patrón decorativo británico */}
+        <div style={{
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 20px)',
+          pointerEvents: 'none'
+        }} />
+        
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '20px',
+          position: 'relative',
+          zIndex: 1
+        }}>
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <h1 style={{
+              fontSize: 'clamp(16px, 4.5vw, 28px)',
+              margin: '0 0 10px 0',
+              textShadow: '4px 4px 0 #000, 2px 2px 0 rgba(255,215,0,0.5)',
+              color: '#ffd700',
+              letterSpacing: '2px'
+            }}>
+              MONI X LONDON
+            </h1>
+            <p style={{
+              fontSize: 'clamp(8px, 2vw, 12px)',
+              margin: '0',
+              color: '#fff',
+              lineHeight: '1.6',
+              textShadow: '2px 2px 0 #000'
+            }}>
+              🇬🇧 The Ultimate Guide 🎮
+            </p>
+          </div>
+          
+          {/* Sprite real de Mónica y Edu */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(255,255,255,0.1)',
+            border: '3px solid rgba(255,215,0,0.6)',
+            padding: '10px',
+            borderRadius: '4px',
+            backdropFilter: 'blur(5px)'
+          }}>
+            <img 
+              src="cover-london.png" 
+              alt="Mónica y Edu pixel art"
+              style={{
+                width: 'auto',
+                height: 'clamp(100px, 15vw, 180px)',
+                imageRendering: 'pixelated',
+                filter: 'drop-shadow(3px 3px 0 #000)'
+              }}
+              onError={(e) => {
+                // Fallback si la imagen no carga
+                e.target.style.display = 'none';
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Selector de días */}
+      <div style={{
+        display: 'flex',
+        gap: '10px',
+        marginBottom: '30px',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+      }}>
+        {Object.keys(itinerary).map(day => (
+          <button
+            key={day}
+            onClick={() => setSelectedDay(day)}
+            style={{
+              padding: '15px 20px',
+              fontSize: 'clamp(8px, 2vw, 12px)',
+              background: selectedDay === day ? '#ffd700' : '#2c3e50',
+              color: selectedDay === day ? '#000' : '#fff',
+              border: '4px solid',
+              borderColor: selectedDay === day ? '#ff6b6b' : '#34495e',
+              borderRadius: '0',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              textTransform: 'uppercase',
+              boxShadow: selectedDay === day ? '0 6px 0 #8b6914' : '0 4px 0 #1a252f',
+              transform: selectedDay === day ? 'translateY(-2px)' : 'none',
+              transition: 'all 0.1s'
+            }}
+            onMouseDown={(e) => e.currentTarget.style.transform = 'translateY(2px)'}
+            onMouseUp={(e) => e.currentTarget.style.transform = selectedDay === day ? 'translateY(-2px)' : 'none'}
+          >
+            {itinerary[day].name}
+          </button>
+        ))}
+      </div>
+
+      {/* Botón trucos */}
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <button
+          onClick={() => setShowTricks(!showTricks)}
+          style={{
+            padding: '12px 24px',
+            fontSize: 'clamp(8px, 2vw, 12px)',
+            background: '#e74c3c',
+            color: '#fff',
+            border: '4px solid #c0392b',
+            borderRadius: '0',
+            cursor: 'pointer',
+            fontFamily: 'inherit',
+            boxShadow: '0 4px 0 #922b21'
+          }}
+        >
+          {showTricks ? '❌ Cerrar' : '💰 TRUCOS AHORRO'}
+        </button>
+      </div>
+
+      {/* Panel trucos */}
+      {showTricks && (
+        <div style={{
+          background: '#27ae60',
+          border: '4px solid #229954',
+          padding: '20px',
+          marginBottom: '30px',
+          borderRadius: '0',
+          boxShadow: '0 8px 0 #1e8449'
+        }}>
+          <h2 style={{
+            fontSize: 'clamp(12px, 3vw, 16px)',
+            marginTop: '0',
+            color: '#ffd700',
+            textShadow: '2px 2px 0 #000'
+          }}>
+            💡 TRUCOS PRO
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '15px'
+          }}>
+            {tricks.map((trick, i) => (
+              <div key={i} style={{
+                background: '#2ecc71',
+                border: '3px solid #fff',
+                padding: '15px',
+                fontSize: 'clamp(7px, 1.8vw, 10px)',
+                lineHeight: '1.6'
+              }}>
+                <strong style={{ color: '#000' }}>{trick.title}:</strong>
+                <br />
+                {trick.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Info del día */}
+      <div style={{
+        background: '#34495e',
+        border: '4px solid #2c3e50',
+        padding: '20px',
+        marginBottom: '20px',
+        borderRadius: '0',
+        boxShadow: '0 6px 0 #1a252f'
+      }}>
+        <h2 style={{
+          fontSize: 'clamp(14px, 3.5vw, 20px)',
+          margin: '0 0 10px 0',
+          color: '#ffd700',
+          textShadow: '3px 3px 0 #000'
+        }}>
+          {currentDay.name}: {currentDay.subtitle}
+        </h2>
+        <p style={{
+          fontSize: 'clamp(8px, 2vw, 12px)',
+          margin: '0',
+          color: '#ecf0f1'
+        }}>
+          📍 Zona: {currentDay.zone}
+        </p>
+      </div>
+
+      {/* Actividades */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
+      }}>
+        {currentDay.activities.map(activity => {
+          const checkKey = `${selectedDay}-${activity.id}`;
+          const isChecked = checkedItems[checkKey];
+
+          return (
+            <div
+              key={activity.id}
+              style={{
+                background: isChecked ? '#27ae60' : '#2c3e50',
+                border: '4px solid',
+                borderColor: isChecked ? '#229954' : '#34495e',
+                padding: '20px',
+                borderRadius: '0',
+                position: 'relative',
+                boxShadow: '0 6px 0 #1a252f',
+                opacity: isChecked ? 0.8 : 1,
+                transition: 'all 0.3s'
+              }}
+            >
+              {/* Checkbox */}
+              <button
+                onClick={() => toggleCheck(selectedDay, activity.id)}
+                style={{
+                  position: 'absolute',
+                  top: '15px',
+                  right: '15px',
+                  width: '32px',
+                  height: '32px',
+                  background: isChecked ? '#ffd700' : '#34495e',
+                  border: '3px solid #000',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '0',
+                  padding: '0'
+                }}
+              >
+                {isChecked && <Check size={20} color="#000" />}
+              </button>
+
+              <div style={{ paddingRight: '50px' }}>
+                <div style={{
+                  fontSize: 'clamp(8px, 2vw, 11px)',
+                  color: '#ffd700',
+                  marginBottom: '8px',
+                  fontWeight: 'bold'
+                }}>
+                  ⏰ {activity.time}
+                </div>
+
+                <h3 style={{
+                  fontSize: 'clamp(12px, 3vw, 16px)',
+                  margin: '0 0 15px 0',
+                  color: '#fff',
+                  textDecoration: isChecked ? 'line-through' : 'none'
+                }}>
+                  {activity.title}
+                </h3>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '10px',
+                  fontSize: 'clamp(7px, 1.8vw, 10px)',
+                  lineHeight: '1.6',
+                  marginBottom: '15px'
+                }}>
+                  <div>
+                    <MapPin size={12} style={{ display: 'inline', marginRight: '5px' }} />
+                    <strong>Zona:</strong> {activity.zone}
+                  </div>
+                  <div>
+                    <Clock size={12} style={{ display: 'inline', marginRight: '5px' }} />
+                    <strong>Duración:</strong> {activity.duration}
+                  </div>
+                  {activity.tickets && (
+                    <div>
+                      <Ticket size={12} style={{ display: 'inline', marginRight: '5px' }} />
+                      <strong>Entrada:</strong> {activity.tickets}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{
+                  background: 'rgba(0,0,0,0.3)',
+                  padding: '10px',
+                  marginBottom: '10px',
+                  fontSize: 'clamp(7px, 1.8vw, 9px)',
+                  lineHeight: '1.6',
+                  border: '2px solid rgba(255,255,255,0.2)'
+                }}>
+                  <strong>🚇 Transporte:</strong> {activity.transport}
+                </div>
+
+                {activity.notes && (
+                  <div style={{
+                    fontSize: 'clamp(7px, 1.8vw, 9px)',
+                    color: '#ecf0f1',
+                    lineHeight: '1.6',
+                    marginBottom: '10px'
+                  }}>
+                    <Info size={12} style={{ display: 'inline', marginRight: '5px' }} />
+                    {activity.notes}
+                  </div>
+                )}
+
+                {activity.maps && (
+                  <a
+                    href={activity.maps}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      background: '#e74c3c',
+                      color: '#fff',
+                      textDecoration: 'none',
+                      fontSize: 'clamp(7px, 1.8vw, 10px)',
+                      border: '3px solid #c0392b',
+                      marginTop: '10px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🗺️ Ver en Maps
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        marginTop: '50px',
+        padding: '30px',
+        background: '#2c3e50',
+        border: '4px solid #34495e',
+        borderRadius: '0',
+        textAlign: 'center',
+        fontSize: 'clamp(7px, 1.8vw, 10px)',
+        lineHeight: '1.8'
+      }}>
+        <div style={{ marginBottom: '15px', fontSize: 'clamp(10px, 2.5vw, 14px)' }}>
+          ☕ 🎩 🚇 🇬🇧
+        </div>
+        <p style={{ margin: '0 0 10px 0', color: '#ecf0f1' }}>
+          Guía creada con mucho cariño (y píxeles) para Mónica & Edu
+        </p>
+        <p style={{ margin: '0', color: '#95a5a6' }}>
+          Apps útiles: Citymapper | Google Maps offline | The Fork
+        </p>
+        <p style={{ margin: '10px 0 0 0', color: '#ffd700', fontWeight: 'bold' }}>
+          ¡Pasadlo de puta madre en Londres! 🎮
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default LondonGuide;
